@@ -1,6 +1,6 @@
 ---
 name: baoyu-infographic
-description: Generate professional infographics with 21 layout types and 21 visual styles. Analyzes content, recommends layout×style combinations, and generates publication-ready infographics. Use when user asks to create "infographic", "信息图", "visual summary", "可视化", or "高密度信息大图".
+description: Generate professional infographics with 12 layout types and 9 visual styles tailored for technical management reporting. Analyzes content, recommends layout×style combinations, and generates publication-ready infographics. Use when user asks to create "infographic", "信息图", "visual summary", "可视化", or "高密度信息大图".
 version: 1.57.1
 metadata:
   openclaw:
@@ -83,66 +83,45 @@ Default behavior: **confirm before generation**.
 
 | Option | Values |
 |--------|--------|
-| `--layout` | 21 options (see Layout Gallery), default: bento-grid |
-| `--style` | 21 options (see Style Gallery), default: craft-handmade |
+| `--layout` | 12 options (see Layout Gallery), default: bento-grid |
+| `--style` | 9 options (see Style Gallery), default: corporate-memphis |
 | `--aspect` | Named: landscape (16:9), portrait (9:16), square (1:1). Custom: any W:H ratio (e.g., 3:4, 4:3, 2.35:1) |
 | `--lang` | en, zh, ja, etc. |
 | `--no-confirm` | Skip Step 4 only when the user explicitly requests direct generation without confirmation |
 | `--ref <files...>` | Reference images (file paths) for style / palette / composition / subject guidance |
 
-## Layout Gallery (21)
+## Layout Gallery (12)
 
 | Layout | Best For |
 |--------|----------|
 | `linear-progression` | Timelines, processes, tutorials |
 | `binary-comparison` | A vs B, before-after, pros-cons |
 | `comparison-matrix` | Multi-factor comparisons |
-| `hierarchical-layers` | Pyramids, priority levels |
-| `tree-branching` | Categories, taxonomies |
 | `hub-spoke` | Central concept with related items |
 | `structural-breakdown` | Exploded views, cross-sections |
 | `bento-grid` | Multiple topics, overview (default) |
-| `iceberg` | Surface vs hidden aspects |
 | `bridge` | Problem-solution |
-| `funnel` | Conversion, filtering |
 | `isometric-map` | Spatial relationships |
 | `dashboard` | Metrics, KPIs |
-| `periodic-table` | Categorized collections |
-| `comic-strip` | Narratives, sequences |
-| `story-mountain` | Plot structure, tension arcs |
-| `jigsaw` | Interconnected parts |
-| `venn-diagram` | Overlapping concepts |
 | `winding-roadmap` | Journey, milestones |
 | `circular-flow` | Cycles, recurring processes |
 | `dense-modules` | High-density modules, data-rich guides |
 
 Full definitions live at `references/layouts/<layout>.md`.
 
-## Style Gallery (21)
+## Style Gallery (9)
 
 | Style | Description |
 |-------|-------------|
-| `craft-handmade` | Hand-drawn, paper craft (default) |
-| `claymation` | 3D clay figures, stop-motion |
-| `kawaii` | Japanese cute, pastels |
-| `storybook-watercolor` | Soft painted, whimsical |
-| `chalkboard` | Chalk on black board |
-| `cyberpunk-neon` | Neon glow, futuristic |
-| `bold-graphic` | Comic style, halftone |
-| `aged-academia` | Vintage science, sepia |
-| `corporate-memphis` | Flat vector, vibrant |
+| `corporate-memphis` | Flat vector, vibrant (default) |
 | `technical-schematic` | Blueprint, engineering |
-| `origami` | Folded paper, geometric |
-| `pixel-art` | Retro 8-bit |
 | `ui-wireframe` | Grayscale interface mockup |
-| `subway-map` | Transit diagram |
 | `ikea-manual` | Minimal line art |
-| `knolling` | Organized flat-lay |
-| `lego-brick` | Toy brick construction |
 | `pop-laboratory` | Blueprint grid, coordinate markers, lab precision |
-| `morandi-journal` | Hand-drawn doodle, warm Morandi tones |
-| `retro-pop-grid` | 1970s retro pop art, Swiss grid, thick outlines |
-| `hand-drawn-edu` | Macaron pastels, hand-drawn wobble, stick figures |
+| `chalkboard` | Chalk on black board |
+| `aged-academia` | Vintage science, sepia |
+| `subway-map` | Transit diagram |
+| `knolling` | Organized flat-lay |
 
 Full definitions live at `references/styles/<style>.md`.
 
@@ -150,25 +129,24 @@ Full definitions live at `references/styles/<style>.md`.
 
 | Content Type | Layout + Style |
 |--------------|----------------|
-| Timeline/History | `linear-progression` + `craft-handmade` |
-| Step-by-step | `linear-progression` + `ikea-manual` |
-| A vs B | `binary-comparison` + `corporate-memphis` |
-| Hierarchy | `hierarchical-layers` + `craft-handmade` |
-| Overlap | `venn-diagram` + `craft-handmade` |
-| Conversion | `funnel` + `corporate-memphis` |
-| Cycles | `circular-flow` + `craft-handmade` |
-| Technical | `structural-breakdown` + `technical-schematic` |
-| Metrics | `dashboard` + `corporate-memphis` |
-| Educational | `bento-grid` + `chalkboard` |
-| Journey | `winding-roadmap` + `storybook-watercolor` |
-| Categories | `periodic-table` + `bold-graphic` |
-| Product Guide | `dense-modules` + `morandi-journal` |
-| Technical Guide | `dense-modules` + `pop-laboratory` |
-| Trendy Guide | `dense-modules` + `retro-pop-grid` |
-| Educational Diagram | `hub-spoke` + `hand-drawn-edu` |
-| Process Tutorial | `linear-progression` + `hand-drawn-edu` |
+| Timeline/Milestone | `linear-progression` + `ikea-manual` |
+| SOP/Process | `linear-progression` + `ikea-manual` |
+| A vs B / Refactor | `binary-comparison` + `ui-wireframe` |
+| Multi-factor selection | `comparison-matrix` + `corporate-memphis` |
+| Concept explainer | `hub-spoke` + `chalkboard` |
+| Code/System architecture | `structural-breakdown` + `technical-schematic` |
+| Data flow / Call chain | `dense-modules` + `subway-map` |
+| Project overview | `bento-grid` + `corporate-memphis` |
+| Problem-solution | `bridge` + `corporate-memphis` |
+| Deployment topology | `isometric-map` + `pop-laboratory` |
+| Project status / KPI | `dashboard` + `corporate-memphis` |
+| Quarterly roadmap | `winding-roadmap` + `corporate-memphis` |
+| DevOps / CI-CD cycle | `circular-flow` + `technical-schematic` |
+| Deep tech guide | `dense-modules` + `pop-laboratory` |
+| Tool / stack inventory | `bento-grid` + `knolling` |
+| Theory / first principles | `dense-modules` + `aged-academia` |
 
-Default combination: `bento-grid` + `craft-handmade` (fallback recommendation only — per the [Confirmation Policy](#confirmation-policy), defaults never bypass Step 4).
+Default combination: `bento-grid` + `corporate-memphis` (fallback recommendation only — per the [Confirmation Policy](#confirmation-policy), defaults never bypass Step 4).
 
 ## Keyword Shortcuts
 
@@ -176,8 +154,8 @@ When the user's input contains these keywords, use the mapped layout as the lead
 
 | User Keyword | Layout | Recommended Styles | Default Aspect | Prompt Notes |
 |--------------|--------|--------------------|----------------|--------------|
-| 高密度信息大图 / high-density-info | `dense-modules` | `morandi-journal`, `pop-laboratory`, `retro-pop-grid` | portrait | — |
-| 信息图 / infographic | `bento-grid` | `craft-handmade` | landscape | Minimalist: clean canvas, ample whitespace, no complex background textures. Simple cartoon elements and icons only. |
+| 高密度信息大图 / high-density-info | `dense-modules` | `pop-laboratory`, `technical-schematic`, `aged-academia` | portrait | — |
+| 信息图 / infographic | `bento-grid` | `corporate-memphis` | landscape | Minimalist: clean canvas, ample whitespace, no complex background textures. Simple cartoon elements and icons only. |
 
 ## Output Structure
 
