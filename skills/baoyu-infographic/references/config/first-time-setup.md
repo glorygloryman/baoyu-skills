@@ -38,82 +38,88 @@ No EXTEND.md found
 
 ## Questions
 
-**Language**: Use the user's input language for question text. Do not always default to English.
+**Language**: 使用用户输入的语言展示问题文本（中文用户用中文问，英文用户用英文问）。**请勿固定使用英文**。下面给出中文模板，英文用户请按对应字段直译。
+
+每个选项必须附带"适用描述"（description 字段），说明该选项最适合哪类汇报场景，参考 SKILL.md 的 `Recommended Combinations` 表。
 
 Use a single `AskUserQuestion` with multiple questions (the runtime auto-adds an "Other" option):
 
-### Question 1: Preferred Layout
+### Question 1: 默认版式（Preferred Layout）
 
 ```
-header: "Layout"
-question: "Default layout preference?"
+header: "默认版式"
+question: "请选择默认的信息图版式？"
 options:
-  - label: "Auto-select (Recommended)"
-    description: "Pick layout per content in Step 3"
+  - label: "自动选择（推荐）"
+    description: "Step 3 根据内容类型自动推荐最合适的版式"
   - label: "bento-grid"
-    description: "Multiple topics, overview (general default)"
-  - label: "linear-progression"
-    description: "Timelines, processes, tutorials"
+    description: "多主题概览 — 周报 / 月报 / 项目情况汇报"
+  - label: "structural-breakdown"
+    description: "爆炸拆解图 — 代码 / 系统架构讲解"
+  - label: "dashboard"
+    description: "指标看板 — 项目状态 / KPI / 风险红绿灯"
   - label: "dense-modules"
-    description: "High-density modules, data-rich guides"
+    description: "高密度模块 — 深度技术普及长图"
 ```
 
-### Question 2: Preferred Style
+### Question 2: 默认风格（Preferred Style）
 
 ```
-header: "Style"
-question: "Default visual style preference?"
+header: "默认风格"
+question: "请选择默认的视觉风格？"
 options:
-  - label: "Auto-select (Recommended)"
-    description: "Pick style per tone in Step 3"
-  - label: "craft-handmade"
-    description: "Hand-drawn, paper craft (general default)"
+  - label: "自动选择（推荐）"
+    description: "Step 3 根据内容调性自动推荐最合适的风格"
   - label: "corporate-memphis"
-    description: "Flat vector, vibrant"
-  - label: "morandi-journal"
-    description: "Hand-drawn doodle, warm Morandi tones"
+    description: "扁平矢量、明亮 — 向管理层汇报最稳（默认）"
+  - label: "technical-schematic"
+    description: "工程蓝图 — 代码 / 架构讲解王者"
+  - label: "pop-laboratory"
+    description: "蓝图坐标网格、实验室精度 — 工程师审美最高公约数"
+  - label: "ikea-manual"
+    description: "极简线稿 — SOP / 规范 / 操作手册首选"
 ```
 
-### Question 3: Preferred Aspect
+### Question 3: 默认比例（Preferred Aspect）
 
 ```
-header: "Aspect"
-question: "Default aspect ratio?"
+header: "默认比例"
+question: "请选择默认的画幅比例？"
 options:
-  - label: "Auto-select (Recommended)"
-    description: "Pick per layout in Step 4"
-  - label: "landscape"
-    description: "16:9 (slides, blogs, web)"
-  - label: "portrait"
-    description: "9:16 (mobile, social, dense modules)"
-  - label: "square"
-    description: "1:1 (social, thumbnails)"
+  - label: "自动选择（推荐）"
+    description: "Step 4 根据版式自动推荐合适的比例"
+  - label: "landscape 16:9"
+    description: "横版 — 会议演示 / PPT 嵌入 / 飞书文档（推荐）"
+  - label: "portrait 9:16"
+    description: "竖版 — 制度类 / 深度普及 / 手机端阅读 / 群内传播"
+  - label: "square 1:1"
+    description: "方版 — 社交贴文 / 缩略图"
 ```
 
-### Question 4: Language
+### Question 4: 信息图文字语言（Output Language）
 
 ```
-header: "Language"
-question: "Output language for infographic text?"
+header: "信息图文字语言"
+question: "信息图中文字使用什么语言？"
 options:
-  - label: "Auto-detect (Recommended)"
-    description: "Match source content language"
-  - label: "zh"
-    description: "Chinese (中文)"
-  - label: "en"
-    description: "English"
+  - label: "自动检测（推荐）"
+    description: "与源内容语言保持一致"
+  - label: "zh 中文"
+    description: "强制使用中文输出"
+  - label: "en 英文"
+    description: "强制使用英文输出"
 ```
 
-### Question 5: Save Location
+### Question 5: 偏好保存位置（Save Location）
 
 ```
-header: "Save"
-question: "Where to save preferences?"
+header: "偏好保存位置"
+question: "偏好配置保存到哪里？"
 options:
-  - label: "Project"
-    description: ".baoyu-skills/ (this project only)"
-  - label: "User"
-    description: "~/.baoyu-skills/ (all projects)"
+  - label: "Project：只对当前项目生效"
+    description: "保存到 .baoyu-skills/baoyu-infographic/EXTEND.md"
+  - label: "User：对所有项目生效"
+    description: "保存到 ~/.baoyu-skills/baoyu-infographic/EXTEND.md（推荐）"
 ```
 
 ## Save Locations
@@ -142,11 +148,14 @@ preferred_style: [selected style or null]
 preferred_aspect: [landscape|portrait|square|null]
 language: [selected language or null]
 preferred_image_backend: auto
+image_model: gpt-image-2
 custom_styles: []
 ---
 ```
 
-`preferred_image_backend: auto` is the baked-in default — first-time setup never asks about it. The `## Image Generation Tools` rule in SKILL.md then picks the runtime-native tool (Codex `imagegen`, Hermes `image_generate`, etc.) when one is available, and falls back to installed backends like `baoyu-imagine`.
+`preferred_image_backend: auto` 是内置默认值——首次设置不询问。SKILL.md 中的 `## Image Generation Tools` 规则会优先选择运行时原生工具（Codex `imagegen`、Hermes `image_generate` 等），无原生工具时回落到已安装后端（如 `baoyu-imagine`）。
+
+`image_model: gpt-image-2` 是内置默认值——首次设置同样不询问。当后端为 Codex `imagegen` 或其它支持显式模型选择的图像 API 时，Step 6 必须把该字段传给后端的 `model` 参数；如后端不接受该参数则忽略，但**不要静默降级到其它模型**。如需改用其它模型，编辑 EXTEND.md 即可。
 
 ## Modifying Preferences Later
 

@@ -267,20 +267,21 @@ Combine:
 2. Ensure the full final prompt is persisted at `prompts/infographic.md` (already written in Step 5) BEFORE invoking the backend — the file is the reproducibility record.
 3. **Check for existing file**: Before generating, check if `infographic.png` exists
    - If exists: Rename to `infographic-backup-YYYYMMDD-HHMMSS.png`
-4. Call the chosen backend with the prompt file and output path
-5. On failure, auto-retry once
+4. **Resolve image model**: Read `image_model` from EXTEND.md (default `gpt-image-2` when absent). If the chosen backend accepts a `model` parameter (Codex `imagegen`, OpenAI/Azure image API, DashScope `wanxiang`/`wan` series, etc.), pass `image_model` as that parameter. If the backend does not support explicit model selection, ignore the field — do NOT fall back to a different model silently; record in the Step 7 summary that the model field was ignored.
+5. Call the chosen backend with the prompt file, output path, and resolved `model` arg
+6. On failure, auto-retry once
 
 ### Step 7: Output Summary
 
-Report: topic, layout, style, aspect, language, image backend, output path, files created.
+Report: topic, layout, style, aspect, language, image backend, **image model used (or "model field ignored — backend does not support explicit model selection")**, output path, files created.
 
 ## References
 
 - `references/analysis-framework.md` - Analysis methodology
 - `references/structured-content-template.md` - Content format
 - `references/base-prompt.md` - Prompt template
-- `references/layouts/<layout>.md` - 21 layout definitions
-- `references/styles/<style>.md` - 21 style definitions
+- `references/layouts/<layout>.md` - 12 layout definitions
+- `references/styles/<style>.md` - 9 style definitions
 
 ## Changing Preferences
 
@@ -293,4 +294,5 @@ EXTEND.md lives at the first matching path in Step 1.1. Three ways to change it:
   - `preferred_image_backend: codex-imagegen` — pin to Codex's built-in.
   - `preferred_image_backend: baoyu-imagine` — pin to the baoyu-imagine skill.
   - `preferred_image_backend: ask` — confirm backend every run.
-  - `preferred_layout: dense-modules`, `preferred_style: morandi-journal`, `preferred_aspect: portrait`, `language: zh` — shift the Step-3 recommendations and Step-4 defaults (per [Confirmation Policy](#confirmation-policy), these never bypass Step 4).
+  - `image_model: gpt-image-2` — default image model passed to the backend's `model` arg (Step 6.4). Change to e.g. `gpt-image-1`, `dall-e-3`, `wanx-v1` to switch models without changing backend.
+  - `preferred_layout: dense-modules`, `preferred_style: pop-laboratory`, `preferred_aspect: portrait`, `language: zh` — shift the Step-3 recommendations and Step-4 defaults (per [Confirmation Policy](#confirmation-policy), these never bypass Step 4).

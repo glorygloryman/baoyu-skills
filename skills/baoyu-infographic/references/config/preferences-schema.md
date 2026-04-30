@@ -11,15 +11,16 @@ description: EXTEND.md YAML schema for baoyu-infographic user preferences
 ---
 version: 1
 
-preferred_layout: null    # any of the 21 layouts (see Layout Gallery in SKILL.md) or null
-preferred_style: null     # any of the 21 styles (see Style Gallery in SKILL.md) or null
+preferred_layout: null    # any of the 12 layouts (see Layout Gallery in SKILL.md) or null
+preferred_style: null     # any of the 9 styles (see Style Gallery in SKILL.md) or null
 preferred_aspect: null    # landscape|portrait|square|null  (custom W:H also accepted)
 
 language: null            # zh|en|ja|ko|null (null = auto-detect from source)
 
 preferred_image_backend: auto   # auto|ask|<backend-id>
+image_model: gpt-image-2        # default image model passed to backend's model param
 
-custom_styles:            # extra style definitions merged with the 21 built-ins
+custom_styles:            # extra style definitions merged with the built-ins
   - name: my-brand
     description: "Short description shown in Step 3 recommendations"
     prompt_fragment: "Style traits to inject into Step 5 prompt"
@@ -36,7 +37,8 @@ custom_styles:            # extra style definitions merged with the 21 built-ins
 | `preferred_aspect` | string\|null | null | Default aspect for Step 4 (named preset or W:H string) |
 | `language` | string\|null | null | Output language (null = auto-detect from source content) |
 | `preferred_image_backend` | string | `auto` | Image backend selection. `auto` = prefer runtime-native tool, fall back to the only installed backend, ask if multiple non-native are present. `ask` = always confirm on every run. `<backend-id>` (e.g., `codex-imagegen`, `baoyu-imagine`, `image_generate`) = pin this backend when available; fall back to `auto` when it isn't. Absent = `auto`. |
-| `custom_styles` | array | [] | Additional styles available alongside the 21 built-ins |
+| `image_model` | string | `gpt-image-2` | Default image model id passed to the backend's `model` parameter when the backend supports explicit model selection (e.g., Codex `imagegen`, OpenAI/Azure image API, DashScope). If the backend does not accept a `model` arg, this field is ignored — do NOT silently fall back to a different model. |
+| `custom_styles` | array | [] | Additional styles available alongside the built-ins |
 
 Backend resolution logic is documented in the `## Image Generation Tools` section of `SKILL.md`. This doc only defines the field.
 
@@ -52,27 +54,28 @@ Example backend ids:
 
 ## Layout Options
 
-See the **Layout Gallery (21)** table in `SKILL.md` for the canonical list. Common picks:
+See the **Layout Gallery (12)** table in `SKILL.md` for the canonical list. Common picks:
 
 | Value | Best For |
 |-------|----------|
 | `bento-grid` | General default — overview, multiple topics |
-| `linear-progression` | Timelines, processes, tutorials |
+| `structural-breakdown` | Code/system architecture walkthrough |
+| `dashboard` | Project status, KPIs |
+| `linear-progression` | Timelines, processes, SOPs |
 | `dense-modules` | High-density modules, data-rich guides |
-| `hub-spoke` | Central concept with related items |
-| `dashboard` | Metrics, KPIs |
+| `hub-spoke` | Concept evangelism with related items |
 
 ## Style Options
 
-See the **Style Gallery (21)** table in `SKILL.md` for the canonical list. Common picks:
+See the **Style Gallery (9)** table in `SKILL.md` for the canonical list. Common picks:
 
 | Value | Description |
 |-------|-------------|
-| `craft-handmade` | Hand-drawn, paper craft (default) |
-| `corporate-memphis` | Flat vector, vibrant |
-| `morandi-journal` | Hand-drawn doodle, warm Morandi tones |
-| `pop-laboratory` | Blueprint grid, lab precision |
-| `retro-pop-grid` | 1970s retro pop art, Swiss grid |
+| `corporate-memphis` | Flat vector, vibrant (default — safest for management reports) |
+| `technical-schematic` | Blueprint, engineering — code/architecture |
+| `pop-laboratory` | Blueprint grid, lab precision — engineer-friendly |
+| `ikea-manual` | Minimal line art — SOPs, specs |
+| `chalkboard` | Classroom feel — internal tech sharing |
 
 ## Aspect Options
 
@@ -97,12 +100,12 @@ See the **Style Gallery (21)** table in `SKILL.md` for the canonical list. Commo
 ---
 version: 1
 preferred_layout: bento-grid
-preferred_style: craft-handmade
+preferred_style: corporate-memphis
 language: zh
 ---
 ```
 
-`preferred_image_backend` is omitted above; absence is treated as `auto`.
+`preferred_image_backend` is omitted above; absence is treated as `auto`. `image_model` is also omitted; absence is treated as `gpt-image-2`.
 
 ## Example: Full Preferences
 
@@ -111,16 +114,17 @@ language: zh
 version: 1
 
 preferred_layout: dense-modules
-preferred_style: morandi-journal
+preferred_style: pop-laboratory
 preferred_aspect: portrait
 
 language: zh
 
 preferred_image_backend: codex-imagegen
+image_model: gpt-image-2
 
 custom_styles:
   - name: my-brand
-    description: "Brand-aligned warm pastel infographic"
-    prompt_fragment: "Use brand pastel palette (#F2C7B6, #B6D7E8, #C8E0B4); rounded rectangles; warm hand-drawn outlines; ample whitespace."
+    description: "Brand-aligned tech-management infographic"
+    prompt_fragment: "Use brand palette (#0F172A, #2563EB, #F97316); rounded rectangles; clean sans-serif typography; ample whitespace; engineer-friendly tone."
 ---
 ```
