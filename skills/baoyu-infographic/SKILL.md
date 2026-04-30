@@ -35,6 +35,8 @@ When this skill needs to render an image, resolve the backend in this order:
 
 Setting `preferred_image_backend: ask` forces the step-3 prompt every run regardless of available backends. Users change the pinned backend via the `## Changing Preferences` section below.
 
+**Model selection is backend-dependent.** Some backends (Codex `imagegen` / Image Gen, Hermes `image_generate`, and similar runtime-native skills) decide the model internally and do NOT accept an external `model` parameter — for these, just invoke the tool and accept whatever model it uses. Other backends (`baoyu-imagine`, OpenAI/Azure direct API, DashScope) accept a `model` argument; for those, pass `image_model` from EXTEND.md (default `gpt-image-2`) as the `model` arg. The `image_model` field is therefore a **hint, not a guarantee** — see Step 6.4 for the resolution rule.
+
 **Prompt file requirement (hard)**: write each image's full, final prompt to a standalone file under `prompts/` (naming: `NN-{type}-[slug].md`) BEFORE invoking any backend. The backend receives the prompt file (or its content); the file is the reproducibility record and lets you switch backends without regenerating prompts.
 
 Concrete tool names (`imagegen`, `image_generate`, `baoyu-imagine`) above are examples — substitute the local equivalents under the same rule.
@@ -267,13 +269,15 @@ Combine:
 2. Ensure the full final prompt is persisted at `prompts/infographic.md` (already written in Step 5) BEFORE invoking the backend — the file is the reproducibility record.
 3. **Check for existing file**: Before generating, check if `infographic.png` exists
    - If exists: Rename to `infographic-backup-YYYYMMDD-HHMMSS.png`
-4. **Resolve image model**: Read `image_model` from EXTEND.md (default `gpt-image-2` when absent). If the chosen backend accepts a `model` parameter (Codex `imagegen`, OpenAI/Azure image API, DashScope `wanxiang`/`wan` series, etc.), pass `image_model` as that parameter. If the backend does not support explicit model selection, ignore the field — do NOT fall back to a different model silently; record in the Step 7 summary that the model field was ignored.
-5. Call the chosen backend with the prompt file, output path, and resolved `model` arg
+4. **Resolve image model (hint, not guarantee)**: Read `image_model` from EXTEND.md (default `gpt-image-2` when absent). Two cases:
+   - **Backend accepts a `model` arg** (`baoyu-imagine`, OpenAI/Azure direct API, DashScope `wanxiang`/`wan` series): pass `image_model` as the `model` parameter.
+   - **Backend does NOT accept a `model` arg** (Codex `imagegen` / Image Gen skill, Hermes `image_generate`, and most runtime-native image tools): invoke the tool as-is. The model is whatever the tool selects internally — do NOT try to inject the model into the prompt body, do NOT call a different backend just to honor `image_model`, do NOT warn or fail. Just record in Step 7 that model selection was deferred to the backend.
+5. Call the chosen backend with the prompt file, output path, and (where applicable) the resolved `model` arg
 6. On failure, auto-retry once
 
 ### Step 7: Output Summary
 
-Report: topic, layout, style, aspect, language, image backend, **image model used (or "model field ignored — backend does not support explicit model selection")**, output path, files created.
+Report: topic, layout, style, aspect, language, image backend, **image model** (one of: the `image_model` value passed to the backend, OR "deferred to backend — Image Gen / runtime-native tool selects internally"), output path, files created.
 
 ## References
 
@@ -294,5 +298,5 @@ EXTEND.md lives at the first matching path in Step 1.1. Three ways to change it:
   - `preferred_image_backend: codex-imagegen` — pin to Codex's built-in.
   - `preferred_image_backend: baoyu-imagine` — pin to the baoyu-imagine skill.
   - `preferred_image_backend: ask` — confirm backend every run.
-  - `image_model: gpt-image-2` — default image model passed to the backend's `model` arg (Step 6.4). Change to e.g. `gpt-image-1`, `dall-e-3`, `wanx-v1` to switch models without changing backend.
+  - `image_model: gpt-image-2` — default image model **hint** passed to the backend's `model` arg (Step 6.4). **Honored only by backends that accept a `model` parameter** (baoyu-imagine, OpenAI/Azure direct API, DashScope). For Codex Image Gen / Hermes / other runtime-native image tools, the model is selected internally and this hint is ignored. Change to e.g. `gpt-image-1`, `dall-e-3`, `wanx-v1` to switch models on backends that honor the field.
   - `preferred_layout: dense-modules`, `preferred_style: pop-laboratory`, `preferred_aspect: portrait`, `language: zh` — shift the Step-3 recommendations and Step-4 defaults (per [Confirmation Policy](#confirmation-policy), these never bypass Step 4).

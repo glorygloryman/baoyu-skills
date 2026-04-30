@@ -155,7 +155,12 @@ custom_styles: []
 
 `preferred_image_backend: auto` 是内置默认值——首次设置不询问。SKILL.md 中的 `## Image Generation Tools` 规则会优先选择运行时原生工具（Codex `imagegen`、Hermes `image_generate` 等），无原生工具时回落到已安装后端（如 `baoyu-imagine`）。
 
-`image_model: gpt-image-2` 是内置默认值——首次设置同样不询问。当后端为 Codex `imagegen` 或其它支持显式模型选择的图像 API 时，Step 6 必须把该字段传给后端的 `model` 参数；如后端不接受该参数则忽略，但**不要静默降级到其它模型**。如需改用其它模型，编辑 EXTEND.md 即可。
+`image_model: gpt-image-2` 是内置默认值，首次设置同样不询问。**这是一个提示而非保证**：
+
+- **支持显式模型选择的后端**（`baoyu-imagine`、OpenAI/Azure 直连 API、DashScope）：Step 6 会把该字段作为 `model` 参数传给后端。
+- **运行时原生工具**（Codex `imagegen` / Image Gen skill、Hermes `image_generate` 等）：模型由工具自身决定，该字段被忽略——直接调用 Image Gen 即可，不要为了"硬塞 gpt-image-2"而切换到其它后端。
+
+如需改用其它模型，编辑 EXTEND.md 即可（仅对支持模型选择的后端生效）。
 
 ## Modifying Preferences Later
 

@@ -37,7 +37,7 @@ custom_styles:            # extra style definitions merged with the built-ins
 | `preferred_aspect` | string\|null | null | Default aspect for Step 4 (named preset or W:H string) |
 | `language` | string\|null | null | Output language (null = auto-detect from source content) |
 | `preferred_image_backend` | string | `auto` | Image backend selection. `auto` = prefer runtime-native tool, fall back to the only installed backend, ask if multiple non-native are present. `ask` = always confirm on every run. `<backend-id>` (e.g., `codex-imagegen`, `baoyu-imagine`, `image_generate`) = pin this backend when available; fall back to `auto` when it isn't. Absent = `auto`. |
-| `image_model` | string | `gpt-image-2` | Default image model id passed to the backend's `model` parameter when the backend supports explicit model selection (e.g., Codex `imagegen`, OpenAI/Azure image API, DashScope). If the backend does not accept a `model` arg, this field is ignored — do NOT silently fall back to a different model. |
+| `image_model` | string | `gpt-image-2` | Default image model **hint** — passed to the backend's `model` parameter only when the backend supports explicit model selection (`baoyu-imagine`, OpenAI/Azure direct API, DashScope). For runtime-native tools that pick the model internally (**Codex `imagegen` / Image Gen skill, Hermes `image_generate`**), this field is ignored — the tool decides. The skill MUST NOT switch backends just to honor `image_model`. |
 | `custom_styles` | array | [] | Additional styles available alongside the built-ins |
 
 Backend resolution logic is documented in the `## Image Generation Tools` section of `SKILL.md`. This doc only defines the field.
